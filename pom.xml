@@ -11,7 +11,6 @@
 
 	<properties>
 		<tomcat.maven.version>2.2</tomcat.maven.version>
-		<site.basedir>${project.parent.parent.basedir}</site.basedir>
 		<mysql.version>5.1.27</mysql.version>
 		<yui.compressor.version>2.4.2</yui.compressor.version>
 		<codegen.version>1.0-SNAPSHOT</codegen.version>
@@ -32,88 +31,89 @@
 			<artifactId>spring-js</artifactId>
 			<version>2.4.1.RELEASE</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
 		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
-			<version>${mysql.version}</version>
+		    <groupId>com.google.guava</groupId>
+		    <artifactId>guava</artifactId>
+		    <version>23.0</version> 
 		</dependency>
 		<dependency>
-			<groupId>org.apache.velocity</groupId>
-			<artifactId>velocity</artifactId>
-			<version>1.7</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.mybatis</groupId>
-			<artifactId>mybatis</artifactId>
-			<version>3.3.0</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.mybatis</groupId>
-			<artifactId>mybatis-spring</artifactId>
-			<version>1.2.3</version>
+		    <groupId>junit</groupId>
+		    <artifactId>junit</artifactId>
+		    <version>4.11</version>
+		    <scope>test</scope>
 		</dependency>
 	</dependencies>
-	<build>
+	<build>		
 		<plugins>
 			<plugin>
-				<groupId>org.apache.tomcat.maven</groupId>
-				<artifactId>tomcat7-maven-plugin</artifactId>
-				<version>${tomcat.maven.version}</version>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-clean-plugin</artifactId>
+				<version>2.5</version>
+			</plugin>
+			<plugin>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>2.5</version>
 				<configuration>
-					<port>9080</port>
-					<path>/</path>
-					<!-- spring profile -->
-					<systemProperties>
-						<systemProperty>
-							<name>spring.profiles.active</name>
-							<value>development</value>
-						</systemProperty>
-					</systemProperties>
+					<encoding>${project.build.sourceEncoding}</encoding>
 				</configuration>
 			</plugin>
 			<plugin>
-				<groupId>com.googlecode</groupId>
-				<artifactId>maven-db-plugin</artifactId>
-				<version>1.4</version>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.0</version>
 				<configuration>
-					<adminDbConnectionSettings>
-						<jdbcDriver>${connection.driver_class}</jdbcDriver>
-						<jdbcUrl>${connection.admin.url}</jdbcUrl>
-						<userName>${connection.username}</userName>
-						<password>${connection.password}</password>
-					</adminDbConnectionSettings>
-					<appDbConnectionSettings>
-						<jdbcDriver>${connection.driver_class}</jdbcDriver>
-						<jdbcUrl>${connection.url}</jdbcUrl>
-						<userName>${connection.username}</userName>
-						<password>${connection.password}</password>
-					</appDbConnectionSettings>
-					<dbDataScriptsDirectory>
-						<param>src/main/sql/data</param>
-					</dbDataScriptsDirectory>
-					<dbSchemaScriptsDirectory>
-						<param>src/main/sql/schema</param>
-					</dbSchemaScriptsDirectory>
-					<dbUpdateScriptsDirectory>
-						<param>src/main/sql/update</param>
-					</dbUpdateScriptsDirectory>
-					<dbCreateStatements>
-						create database ${db.name} CHARACTER SET
-						'utf8';
-					</dbCreateStatements>
-					<dbDropStatements>drop database ${db.name}; </dbDropStatements>
-					<sqlDelimiter>;;</sqlDelimiter>
-					<scriptEncoding>UTF-8</scriptEncoding>
+					<source>${jdk.version}</source>
+					<target>${jdk.version}</target>
+					<encoding>${project.build.sourceEncoding}</encoding>
 				</configuration>
-				<dependencies>
-					<dependency>
-						<groupId>mysql</groupId>
-						<artifactId>mysql-connector-java</artifactId>
-						<version>${mysql.version}</version>
-					</dependency>
-				</dependencies>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-install-plugin</artifactId>
+				<version>2.4</version>
+			</plugin>   <plugin>
+	        <groupId>org.apache.maven.plugins</groupId>
+	        <artifactId>maven-war-plugin</artifactId>
+	        <version>2.4</version>
+	      </plugin>
+			<!-- 单元测试 -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.13</version>
+				<configuration>
+					<argLine>-Xmx128M</argLine>
+					<includes>
+						<include>**/*Test*.java</include>
+						<include>**/*Test.java</include>
+						<include>**/*IT.java</include>
+						<include>**/*TestCase.java</include>
+					</includes>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-enforcer-plugin</artifactId>
+				<version>1.4</version>
+				<executions>
+					<execution>
+						<id>enforce-versions</id>
+						<goals>
+							<goal>enforce</goal>
+						</goals>
+						<configuration>
+							<rules>
+								<requireMavenVersion>
+									<version>3.2.1</version>
+								</requireMavenVersion>
+								<requireJavaVersion>
+									<version>${jdk.version}</version>
+								</requireJavaVersion>
+							</rules>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
