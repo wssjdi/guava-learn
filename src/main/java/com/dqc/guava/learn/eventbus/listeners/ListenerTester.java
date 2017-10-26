@@ -18,10 +18,25 @@ public class ListenerTester {
 	@Subscribe
 	public void doHandler(final String event){
 		if(LOGGER.isInfoEnabled()){
-			LOGGER.info("recived a event [{}] and will hanle it !",event);
+			LOGGER.info("recived a event [{}] and doHandler will hanle it !",event);
 		}
 	}
 	
+	
+	@Subscribe
+	public void doHandler2(final String event){
+		if(LOGGER.isInfoEnabled()){
+			LOGGER.info("recived a event [{}] and doHandler2 will hanle it !",event);
+		}
+	}
+
+	
+	@Subscribe
+	public void doHandler3(Integer event){
+		if(LOGGER.isInfoEnabled()){
+			LOGGER.info("recived a event [{}] and doHandler3 will hanle it !",event);
+		}
+	}
 	
 
 }
